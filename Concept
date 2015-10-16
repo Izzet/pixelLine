@@ -1,0 +1,6 @@
+finding the line
+ - now the equation for the line
+ - start from one point
+	- what are the deviations for each line neighbouring the start point?
+		- choose the one with smallest deviation
+		- repeat
