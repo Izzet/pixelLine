@@ -4,3 +4,5 @@ finding the line
 	- what are the deviations for each line neighbouring the start point?
 		- choose the one with smallest deviation
 		- repeat
+		
+Python
