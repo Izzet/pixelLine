@@ -1,11 +1,11 @@
 # Input area
 # Input of the parameters
 
-input_points = input("Give input points - x and y from 0 to 100, in bracets separated by commas and semi-colon(e.g. (0,20);(10,30)) : ")
+#input_points = input("Give input points - x and y from 0 to 100, in bracets separated by commas and semi-colon(e.g. (0,20);(10,30)) : ")
 
 # Debug mode
 
-#input_points="(10,35);(100,200)"
+input_points="(0,0);(90,100)"
 
 # Convert parameters
 def withoutBracets(string):
@@ -46,9 +46,9 @@ def getNeighbours(point):
 	return arr
 # Get distance of two points
 def distanceBetween(p1,p2):
-	dx = abs(p1[0]-p2[0])
-	dy = abs(p1[1]-p2[1])
-	return dx+dy
+	dxSq = (p1[0]-p2[0])**2
+	dySq = (p1[1]-p2[1])**2
+	return dxSq+dySq
 # Selecting the appropriate pixel - when two pixels get the same score, y direction goes first
 def selectPoint(points, final):
 	topDist = -1
@@ -57,7 +57,9 @@ def selectPoint(points, final):
 	for point in points:
 		candidate = distanceFromLineSq(point[0],point[1])
 		candidateToFin = distanceBetween(point,final)
-		if (candidate <= topDist and candidateToFin < topDistToFin ) or point == points[0]:
+		if (candidate <= topDist) or point == points[0]:
+			if candidateToFin > topDistToFin and not (point == points[0]):
+				continue
 			topDist = candidate
 			topPoint = point
 			topDistToFin = candidateToFin
@@ -81,9 +83,29 @@ def getNextPoint(linepoints):
 	# Find the proper point
 	new_point = selectPoint(neighbours, finalPoint)
 	return new_point
+# Visualisation
+from tkinter import *
+canvas = False
+canvas_width = 800
+canvas_height = 400
+
+master = Tk()
+	
+canvas = Canvas(master, 
+	width=canvas_width,
+	height=canvas_height)
+canvas.pack()
+
+def addPointAt(x,y, canvas):
+	scale = 2
+	y0 = int(canvas_height * 3 / 4)
+	x0 = int(canvas_width / 4 )
+	canvas.create_rectangle(x+x0,-y+y0,x+x0+scale,-y+y0-scale, fill="black")
 
 # Make Way
 while not (linepoints[-1] == finalPoint):
-	linepoints.append(getNextPoint(linepoints))
+	new_point = getNextPoint(linepoints)
+	linepoints.append(new_point)
+	addPointAt(new_point[0],new_point[1], canvas)
 	
-print(linepoints)
+mainloop()
